@@ -124,3 +124,77 @@ func TestRequestCounterIncrement(t *testing.T) {
 	// Ensure the request counter was incremented.
 	require.EqualValues(t, &expected, &requestCounter, "The request counter failed to increment its request field.")
 }
+
+// func TestWatch(t *testing.T) {
+// 	// Create a simple request counter which logs in 1sec intervals.
+// 	requestCounter := NewRequestCounter(0)
+// 	// Collect all logging statements.
+// 	logs := []string{}
+// 	// Mock logrus.Debug
+// 	rc.Debug = func(args ...interface{}) {
+// 		msg := fmt.Sprint(args[0])
+// 		logs = append(logs, msg)
+// 	}
+// 	// Mock time.
+// 	fakeTime := tw.NewFakeTime(defaultTime)
+// 	rc.Clock = &fakeTime
+// 	// Begin logging.
+// 	requestCounter.Watch()
+// 	// Make sure the logger is actually blocked at the Sleep function.
+// 	fakeTime.WaitForSleeper()
+// 	// Increment the request counter.
+// 	requestCounter.Increment()
+// 	// Advance time forward.
+// 	fakeTime.Advance(time.Second)
+// 	// Define expected logs.
+// 	expected := []string{
+// 		"From 2006-01-02 15:04:05 to 2006-01-02 15:04:06 [0 min] there have been 1 requests to GCR.",
+// 	}
+// 	// Ensure the expected logs were found.
+// 	require.EqualValues(t, expected, logs, "The request counter failed to produce the correct logs.")
+
+// 	// Wipe the logs.
+// 	logs = []string{}
+// 	// Record two fake GCR requests.
+// 	requestCounter.Increment()
+// 	requestCounter.Increment()
+// 	// Advance time forward.
+// 	fakeTime.Advance(time.Second*4 + time.Microsecond)
+// 	// Define expected logs.
+// 	expected = []string{
+// 		"From 2006-01-02 15:04:06 to 2006-01-02 15:04:07 [0 min] there have been 2 requests to GCR.",
+// 		"From 2006-01-02 15:04:07 to 2006-01-02 15:04:08 [0 min] there have been 0 requests to GCR.",
+// 		"From 2006-01-02 15:04:08 to 2006-01-02 15:04:09 [0 min] there have been 0 requests to GCR.",
+// 		"From 2006-01-02 15:04:09 to 2006-01-02 15:04:10 [0 min] there have been 0 requests to GCR.",
+// 	}
+// 	// Ensure the expected logs were found.
+// 	require.EqualValues(t, expected, logs, "The request counter failed to produce the correct logs.")
+// }
+
+func TestWatch(t *testing.T) {
+	// Create a simple request counter.
+	requestCounter := NewRequestCounter(0)
+	requestCounter.Increment = time.Second
+	// Mock time.
+	fakeTime := tw.FakeTime{ Time: defaultTime }
+	rc.Clock = fakeTime
+	// Capture all logs.
+	logs := []string{}
+	// Define the anticipated logs.
+	expected := []string{
+		"From 2006-01-02 15:04:05 to 2006-01-02 15:04:06 [0 min] there have been 0 requests to GCR.",
+		"From 2006-01-02 15:04:06 to 2006-01-02 15:04:07 [0 min] there have been 0 requests to GCR.",
+		"From 2006-01-02 15:04:07 to 2006-01-02 15:04:08 [0 min] there have been 0 requests to GCR.",
+	}
+	// Mock logrus.Debug.
+	rc.Debug = func(args ...interface{}) {
+		msg := fmt.Sprint(args[0])
+		logs = append(logs, msg)
+	}
+	// Start the sleep/wake cycle.
+	requestCounter.Watch()
+	// Advance time.
+	fakeTime.Advance(time.Second * 3)
+	// Ensure the request counter was incremented.
+	require.EqualValues(t, &expected, &requestCounter, "The request counter failed to increment its request field.")
+}
