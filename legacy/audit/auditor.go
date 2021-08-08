@@ -32,6 +32,7 @@ import (
 	"sigs.k8s.io/k8s-container-image-promoter/legacy/logclient"
 	"sigs.k8s.io/k8s-container-image-promoter/legacy/remotemanifest"
 	"sigs.k8s.io/k8s-container-image-promoter/legacy/report"
+	"sigs.k8s.io/k8s-container-image-promoter/legacy/timer"
 )
 
 // InitRealServerContext creates a ServerContext with facilities that are meant
@@ -300,6 +301,10 @@ func (s *ServerContext) Audit(w http.ResponseWriter, r *http.Request) {
 	logInfo.Printf("(%s): reading srcRegistries %v for %q", s.ID, srcRegistries, gcrPayload)
 	logrus.Debug("Querying GCR repository...")
 
+	// Start the timer.
+	timer := timer.Timer{}
+	timer.Start()
+
 	sc.ReadRegistries(
 		srcRegistries,
 		true,
@@ -319,6 +324,7 @@ func (s *ServerContext) Audit(w http.ResponseWriter, r *http.Request) {
 			"(%s) TRANSACTION VERIFIED: %v: agrees with manifest (parent digest %v)\n", s.ID, gcrPayload, parentDigest)
 		logInfo.Println(msg)
 		logrus.Infoln(msg)
+		timer.Stop()
 		_, _ = w.Write([]byte(msg))
 
 		return
