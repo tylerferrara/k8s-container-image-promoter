@@ -6,7 +6,7 @@ require (
 	cloud.google.com/go v0.88.0
 	cloud.google.com/go/logging v1.4.2
 	github.com/Microsoft/go-winio v0.5.0 // indirect
-	github.com/cenkalti/backoff/v4 v4.1.1
+	github.com/cenkalti/backoff/v4 v4.1.2
 	github.com/google/go-containerregistry v0.5.1
 	github.com/google/uuid v1.3.0
 	github.com/kevinburke/ssh_config v1.1.0 // indirect
