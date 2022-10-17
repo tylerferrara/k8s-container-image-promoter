@@ -3,7 +3,8 @@ module sigs.k8s.io/k8s-container-image-promoter
 go 1.16
 
 require (
-	cloud.google.com/go v0.88.0
+	cloud.google.com/go/containeranalysis v0.6.0
+	cloud.google.com/go/errorreporting v0.2.0
 	cloud.google.com/go/logging v1.4.2
 	github.com/Microsoft/go-winio v0.5.0 // indirect
 	github.com/cenkalti/backoff/v4 v4.1.1
@@ -18,9 +19,9 @@ require (
 	github.com/stretchr/testify v1.7.0
 	github.com/xanzy/ssh-agent v0.3.0 // indirect
 	golang.org/x/crypto v0.0.0-20210616213533-5ff15b29337e // indirect
-	golang.org/x/xerrors v0.0.0-20200804184101-5ec99f83aff1
-	google.golang.org/api v0.51.0
-	google.golang.org/genproto v0.0.0-20210721163202-f1cecdd8b78a
+	golang.org/x/xerrors v0.0.0-20220907171357-04be3eba64a2
+	google.golang.org/api v0.99.0
+	google.golang.org/genproto v0.0.0-20221010155953-15ba04fc1c0e
 	gopkg.in/check.v1 v1.0.0-20201130134442-10cb98267c6c // indirect
 	gopkg.in/src-d/go-git.v4 v4.13.1
 	gopkg.in/yaml.v2 v2.4.0
